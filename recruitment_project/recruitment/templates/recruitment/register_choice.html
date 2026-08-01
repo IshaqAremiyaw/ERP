@@ -1,0 +1,20 @@
+{% extends "recruitment/base.html" %}
+{% block title %}Register{% endblock %}
+{% block content %}
+<div class="row justify-content-center g-4">
+  <div class="col-md-4">
+    <div class="card stat-card p-4 text-center h-100">
+      <h4>👤 I'm an Applicant</h4>
+      <p class="text-muted">Browse jobs, apply, and track your applications.</p>
+      <a href="{% url 'register_applicant' %}" class="btn btn-primary mt-auto">Register as Applicant</a>
+    </div>
+  </div>
+  <div class="col-md-4">
+    <div class="card stat-card p-4 text-center h-100">
+      <h4>💼 I'm HR staff</h4>
+      <p class="text-muted">Post jobs, review applications, manage hiring.</p>
+      <a href="{% url 'register_hr' %}" class="btn btn-outline-primary mt-auto">Register as HR</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

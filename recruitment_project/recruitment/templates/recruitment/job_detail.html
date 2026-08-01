@@ -1,0 +1,46 @@
+{% extends "recruitment/base.html" %}
+{% block title %}{{ job.title }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card stat-card p-4">
+      <div class="d-flex justify-content-between align-items-start">
+        <div>
+          <h2 class="mb-1">{{ job.title }}</h2>
+          <p class="text-muted mb-2">{{ job.department|default:"General" }} &middot; {{ job.location|default:"Remote" }} &middot; {{ job.get_employment_type_display }}</p>
+        </div>
+        <span class="badge bg-{% if job.status == 'OPEN' %}success{% else %}secondary{% endif %} fs-6">{{ job.get_status_display }}</span>
+      </div>
+
+      {% if job.salary_min or job.salary_max %}
+      <p><strong>Salary range:</strong> {{ job.salary_min|default:"—" }} - {{ job.salary_max|default:"—" }}</p>
+      {% endif %}
+      {% if job.application_deadline %}
+      <p><strong>Apply by:</strong> {{ job.application_deadline|date:"M d, Y H:i" }}</p>
+      {% endif %}
+
+      <hr>
+      <h5>Description</h5>
+      <p style="white-space: pre-line;">{{ job.description }}</p>
+
+      {% if job.requirements %}
+      <h5>Requirements</h5>
+      <p style="white-space: pre-line;">{{ job.requirements }}</p>
+      {% endif %}
+
+      <hr>
+      {% if not user.is_authenticated %}
+        <a href="{% url 'login' %}" class="btn btn-primary">Login to Apply</a>
+      {% elif user.is_hr %}
+        <p class="text-muted mb-0">HR accounts can't apply to jobs.</p>
+      {% elif already_applied %}
+        <button class="btn btn-secondary" disabled>Already Applied</button>
+      {% elif job.is_open %}
+        <a href="{% url 'apply_job' job.pk %}" class="btn btn-primary">📝 Apply Now</a>
+      {% else %}
+        <button class="btn btn-secondary" disabled>Applications Closed</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

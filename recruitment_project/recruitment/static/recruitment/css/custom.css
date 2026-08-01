@@ -1,0 +1,11 @@
+.stat-card {
+  border: none;
+  border-radius: 0.75rem;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+.stat-card .display-6 {
+  font-weight: 600;
+}
+.badge-status {
+  font-size: 0.8rem;
+}

@@ -1,0 +1,32 @@
+{% extends "recruitment/base.html" %}
+{% block title %}My Applications{% endblock %}
+{% block content %}
+<h2 class="mb-4">📝 My Applications</h2>
+<div class="table-responsive">
+  <table class="table table-hover align-middle bg-white">
+    <thead><tr><th>Job</th><th>Status</th><th>Applied</th><th>Last Updated</th><th></th></tr></thead>
+    <tbody>
+      {% for app in applications %}
+      <tr>
+        <td>{{ app.job_posting.title }}</td>
+        <td><span class="badge bg-secondary badge-status">{{ app.get_status_display }}</span></td>
+        <td>{{ app.applied_at|date:"M d, Y" }}</td>
+        <td>{{ app.updated_at|date:"M d, Y" }}</td>
+        <td>
+          <a href="{% url 'application_detail' app.pk %}" class="btn btn-sm btn-outline-secondary">View</a>
+          {% if app.status != 'WITHDRAWN' and app.status != 'REJECTED' and app.status != 'HIRED' %}
+          <form action="{% url 'withdraw_application' app.pk %}" method="post" class="d-inline"
+                onsubmit="return confirm('Withdraw this application?');">
+            {% csrf_token %}
+            <button class="btn btn-sm btn-outline-danger">Withdraw</button>
+          </form>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="5" class="text-center text-muted py-4">No applications yet.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

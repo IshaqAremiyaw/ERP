@@ -1,0 +1,45 @@
+{% extends "recruitment/base.html" %}
+{% block title %}Review Application{% endblock %}
+{% block content %}
+<h2 class="mb-1">{{ application.applicant.username }} — {{ application.job_posting.title }}</h2>
+<p class="text-muted mb-4">{{ application.applicant.email }} &middot; Applied {{ application.applied_at|date:"M d, Y" }}</p>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card stat-card p-3 mb-3">
+      <h5>Cover Letter</h5>
+      <p>{{ application.cover_letter|default:"—" }}</p>
+      {% if application.resume_snapshot %}
+        <a href="{{ application.resume_snapshot.url }}" target="_blank" class="btn btn-sm btn-outline-secondary">📄 View Resume</a>
+      {% endif %}
+    </div>
+
+    <div class="card stat-card p-3">
+      <h5>📅 Interviews</h5>
+      {% for i in interviews %}
+        <div class="border rounded p-2 mb-2 d-flex justify-content-between">
+          <div>
+            <div><strong>{{ i.get_mode_display }}</strong> — {{ i.scheduled_at|date:"M d, Y H:i" }}</div>
+            <div class="small text-muted">Outcome: {{ i.get_outcome_display }}</div>
+          </div>
+          <a href="{% url 'interview_update' i.pk %}" class="btn btn-sm btn-outline-secondary align-self-center">Edit</a>
+        </div>
+      {% empty %}
+        <p class="text-muted">None scheduled.</p>
+      {% endfor %}
+      <a href="{% url 'interview_schedule' application.pk %}" class="btn btn-sm btn-primary">+ Schedule Interview</a>
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="card stat-card p-3">
+      <h5>Update Status & Notes</h5>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Save</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

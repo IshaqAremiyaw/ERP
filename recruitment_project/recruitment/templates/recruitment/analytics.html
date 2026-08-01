@@ -1,0 +1,58 @@
+{% extends "recruitment/base.html" %}
+{% block title %}Recruitment Analytics{% endblock %}
+{% block content %}
+<h2 class="mb-4">📈 Recruitment Analytics</h2>
+
+<div class="row g-3 mb-4">
+  <div class="col-md-4"><div class="card stat-card p-3 text-center"><div class="text-muted small">Total Jobs Posted</div><div class="display-6">{{ total_jobs }}</div></div></div>
+  <div class="col-md-4"><div class="card stat-card p-3 text-center"><div class="text-muted small">Total Applications</div><div class="display-6">{{ total_applications }}</div></div></div>
+  <div class="col-md-4"><div class="card stat-card p-3 text-center"><div class="text-muted small">Total Hired</div><div class="display-6">{{ total_hired }}</div></div></div>
+</div>
+
+<div class="row g-4">
+  <div class="col-md-6">
+    <div class="card stat-card p-3">
+      <h5>Application Funnel by Status</h5>
+      <canvas id="funnelChart" height="220"></canvas>
+    </div>
+  </div>
+  <div class="col-md-6">
+    <div class="card stat-card p-3">
+      <h5>Top Jobs by Applications</h5>
+      <canvas id="jobsChart" height="220"></canvas>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<script>
+  const funnelCtx = document.getElementById('funnelChart');
+  new Chart(funnelCtx, {
+    type: 'bar',
+    data: {
+      labels: {{ funnel_labels|safe }},
+      datasets: [{
+        label: 'Applications',
+        data: {{ funnel_counts|safe }},
+        backgroundColor: '#0d6efd',
+      }]
+    },
+    options: { plugins: { legend: { display: false } }, scales: { x: { ticks: { autoSkip: false, maxRotation: 60, minRotation: 30 } } } }
+  });
+
+  const jobsCtx = document.getElementById('jobsChart');
+  new Chart(jobsCtx, {
+    type: 'doughnut',
+    data: {
+      labels: [{% for j in jobs_by_applications %}"{{ j.title|escapejs }}",{% endfor %}],
+      datasets: [{
+        data: [{% for j in jobs_by_applications %}{{ j.app_count }},{% endfor %}],
+        backgroundColor: ['#0d6efd', '#6610f2', '#6f42c1', '#d63384', '#fd7e14', '#198754', '#20c997', '#0dcaf0'],
+      }]
+    },
+  });
+</script>
+{% endblock %}

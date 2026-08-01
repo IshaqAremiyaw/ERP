@@ -1,0 +1,45 @@
+{% extends "recruitment/base.html" %}
+{% block title %}Application Detail{% endblock %}
+{% block content %}
+<h2 class="mb-1">{{ application.job_posting.title }}</h2>
+<p class="text-muted">Applied {{ application.applied_at|date:"M d, Y" }} &middot;
+  Status: <span class="badge bg-secondary badge-status">{{ application.get_status_display }}</span></p>
+
+<div class="row g-4">
+  <div class="col-md-7">
+    <div class="card stat-card p-3 mb-3">
+      <h5>Cover Letter</h5>
+      <p class="mb-0">{{ application.cover_letter|default:"—" }}</p>
+    </div>
+
+    <div class="card stat-card p-3">
+      <h5>Status Timeline</h5>
+      <ul class="list-group list-group-flush">
+        {% for h in history %}
+        <li class="list-group-item d-flex justify-content-between">
+          <span>{{ h.from_status|default:"—" }} → <strong>{{ h.to_status }}</strong></span>
+          <span class="text-muted small">{{ h.changed_at|date:"M d, Y H:i" }}</span>
+        </li>
+        {% empty %}
+        <li class="list-group-item text-muted">No status changes yet.</li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+
+  <div class="col-md-5">
+    <div class="card stat-card p-3">
+      <h5>📅 Interviews</h5>
+      {% for i in interviews %}
+        <div class="border rounded p-2 mb-2">
+          <div><strong>{{ i.get_mode_display }}</strong> — {{ i.scheduled_at|date:"M d, Y H:i" }}</div>
+          <div class="text-muted small">{{ i.location_or_link|default:"Details TBD" }}</div>
+          <div class="small">Outcome: {{ i.get_outcome_display }}</div>
+        </div>
+      {% empty %}
+        <p class="text-muted">No interviews scheduled yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
