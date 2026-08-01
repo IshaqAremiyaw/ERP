@@ -1,10 +1,13 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "test-secret-key-do-not-use-in-production"
-DEBUG = True
-ALLOWED_HOSTS = ["*"]
+# In production set `SECRET_KEY` and `DEBUG` via environment variables.
+SECRET_KEY = os.environ.get("SECRET_KEY", "test-secret-key-do-not-use-in-production")
+DEBUG = os.environ.get("DEBUG", "True") == "True"
+# Comma-separated ALLOWED_HOSTS in env, defaults to all during development
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "*").split(",")
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -18,6 +21,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -88,6 +92,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "recruitment" / "static"]
 STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Use WhiteNoise to serve static files in production without a separate server.
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
