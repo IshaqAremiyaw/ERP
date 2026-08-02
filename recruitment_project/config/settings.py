@@ -6,7 +6,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("SECRET_KEY", "test-secret-key-do-not-use-in-production")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
-ALLOWED_HOSTS = ["Jobseeker.onrender.com", "localhost", "127.0.0.1"]
+ALLOWED_HOSTS = ALLOWED_HOSTS = ["Jobseeker.onrender.com", "localhost", "127.0.0.1"]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
@@ -83,7 +83,7 @@ LOGIN_URL = "login"
 LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "login"
 
-CSRF_TRUSTED_ORIGINS = ["https://Jobseeker.onrender.com"]
+CSRF_TRUSTED_ORIGINS = ["https://erp-zh67.onrender.com"]
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = "no-reply@recruitment.local"
